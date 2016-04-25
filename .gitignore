@@ -1,0 +1,237 @@
+int paused = 0;
+float cirx = 400, ciry = 400, cirw = 30, cirh = 30;
+float powx = random(100, 300), powy = -50, poww = 30, powh = 30;
+float xspeed = 3, yspeed = 4;
+float pyspeed = 5;
+float powxx = random(300, 500), powyy = -200, powww = 30, powhh = 30;
+float pyyspeed = 5;
+float plx = 350, ply = 750, plw = 150, plh = 30;
+float plx1 = 350, ply1 = 50, plw1 = 150, plh1 = 30;
+float playerspeed;
+float playerspeed1;
+float xspeed1 = 3, yspeed1 = 4;
+int score = 0;  
+int lives = 3;
+
+void setup()
+{
+  size(800, 800);
+  rectMode(CENTER);
+  textSize (30);
+}
+
+void mouseClicked()
+{
+  paused += 1;
+
+}
+
+void gamestart()
+{
+  background (118, 49, 232);
+  int textx = 130, texty = 210;
+  if (paused == 0)
+  {
+    textSize (60);
+    text ( "  Air Hockey ", textx*1.39, texty);
+    textSize (30);
+    text ( "Two players needed.", textx, texty*1.5);
+    text ( "Player 1 use A and D to move.", textx, texty*2);
+    text ( "Player 2 use J and L to move.", textx, texty*2.5);
+    text ( "Click to start the game!", textx, texty*3);
+    noFill();
+    stroke(255);
+    strokeWeight(10);
+    int rx = 400, ry = 650;
+    rect(rx, rx, ry, ry);
+  }
+}
+  
+  void score()
+{
+  textSize (20);
+  int textx = 565, texty = 40;
+  fill(255);
+
+  text("Score =", textx, texty); //score
+  text(score, textx + 140, texty);
+  
+  int textxx = 60, textyy = 50;
+  text("Lives =", textxx, texty); //lives
+  text(lives, textxx + 140, texty);
+}
+
+void ball()
+{  
+  fill(255);
+  ellipse( cirx, ciry, cirw, cirh); // ball
+
+  cirx = cirx + xspeed; // move ball
+  ciry = ciry + yspeed;
+
+  if ( cirx > 800) // bounce off walls
+  {
+    xspeed = - xspeed;
+  }
+
+  else if (cirx < 0) 
+  {
+    xspeed = -xspeed;
+  }
+
+  if ( ciry > 800) // the game is over
+  {
+    cirx = 400;
+    ciry = 400;
+    lives = lives -1;
+  }
+
+  if ( ciry < 0)
+  {
+    yspeed = -yspeed;
+  }
+
+}
+
+void player()
+{
+  fill(255);
+  rect (plx, ply, plw, plh); // player 1's control
+   rect (plx1, ply1, plw1, plh1); // player 2's control
+}
+
+
+void keyPressed() 
+{
+  if (key == 'a' && plx < 720) // move players control
+  {
+    playerspeed = 20;
+    plx = plx + playerspeed;
+  }
+
+  else if (key == 'd' && plx > 80) 
+  {
+    playerspeed = 20;
+    plx = plx - playerspeed;
+  }
+    if (key == 'l' && plx1 < 720) // move players control
+  {
+    playerspeed1 = 20;
+    plx1 = plx1 + playerspeed1;
+  }
+
+  else if (key == 'j' && plx1 > 80) 
+  {
+    playerspeed1 = 20;
+    plx1 = plx1 - playerspeed1;
+  }
+}
+
+void keyReleased() 
+{  
+  if (key == 'a') // when player releases the button stop the control
+  {
+    playerspeed = 0;
+  }
+
+  else if (key == 'd') 
+  {
+    playerspeed = 0;
+  }
+  
+    if (key == 'l') // when player releases the button stop the control
+  {
+    playerspeed1 = 0;
+  }
+
+  else if (key == 'j') 
+  {
+    playerspeed1 = 0;
+  }
+} 
+
+void bounce()
+{
+
+ if (ciry + cirh/2 > ply - plh/2 && cirx + cirw/2 > plx - plw/2 && cirx - cirw/2 < plx + plw/2 && yspeed >= 0) // bounce off paddle
+ {
+   yspeed = - yspeed;
+ }
+ 
+ if (ciry - cirh/2 < ply1 + plh1/2 && cirx - cirw/2 < plx1 + plw1/2 && cirx + cirw/2 > plx1 - plw1/2 && yspeed <= 0) // bounce off the bottom of the blocks
+ {
+    yspeed = yspeed * -1;
+ }
+}
+
+void gameover()
+{
+   background(118, 49, 232);
+   textSize(50);
+   int textx = 250, texty = 360;
+   text("Game over!", textx, texty); 
+   textSize(30);
+   text("Score = ", textx*1.24, texty*1.3);
+   text(score, textx*1.80, texty*1.3);
+   noFill();
+   stroke(255);
+   strokeWeight(10);    
+   int rx = 400, ry = 450; 
+   rect(rx, rx, ry, ry);
+}
+
+void wingame()
+{
+   background(118, 49, 232);
+   textSize(50);
+   int textx = 250, texty = 360;
+   text("You win!", textx+30, texty); 
+   textSize(30);
+   text("Score = ", textx*1.15, texty*1.3);
+   text(score, textx*1.74, texty*1.3);
+   noFill();
+   stroke(255);
+   strokeWeight(10);    
+   int rx = 400, ry = 450; 
+   rect(rx, rx, ry, ry);
+}
+
+void draw()
+{
+  background (118, 49, 232);
+  gamestart();
+  
+  if (paused >= 1)
+  {
+    background (118, 49, 232);
+    noStroke();
+    score();
+    ball();
+    player();
+    bounce();
+
+    
+    if (lives <= 0)
+  {
+    score();
+    gameover();
+    pyspeed = 0;
+    pyyspeed = 0;
+    xspeed = 0;
+    yspeed = 0;
+  }
+  
+    if (score >= 500)
+  {
+    score();
+    wingame();
+    pyspeed = 0;
+    pyyspeed = 0;
+    xspeed = 0;
+    yspeed = 0;
+
+  }
+  
+  }
+  
+}
